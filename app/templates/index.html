@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>My Amazing Fitbit App</title>
+    </head>
+
+    <body>
+		{% from "_formhelpers.html" import render_field %}
+        {% include '_flashes.html' %}
+		{% if not user_state %}
+			<form method=get action="/">
+					<dl>
+						{{ render_field(form.state) }}
+					</dl>
+				<p><input type=submit value="Add a new fitbit">
+			</form>
+		{% else %}
+			<a href="{{ permission_url }}">Authorize Or Re-authorize {{ user_state }}</a>
+		{% endif %}
+        
+		<p>Authenticated users:</p>
+		{% for user in user_profiles %}
+			<div>{{ "Email: " + user['username'] + ", Fitbit Full Name: " + user['fullName'] }} </div>
+		{% endfor %}
+    </body>
+</html>
