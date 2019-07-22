@@ -3,8 +3,6 @@
 This is a skeleton app to save authorization tokens for multiple devices and then expose the fitbit API (using python-fitbit) to grab data. 
 It is written in Python 3.5 and based on code from https://github.com/Bachmann1234/FitbitFlaskTemplate
 
-First create a [Fitbit App Config](https://dev.fitbit.com/apps/new), use Server mode with Callback URL http://localhost:5000/oauth-redirect
-
 To install, clone this repo somewhere, and create a virtual environment (I am using conda):
 ```
 # Create a virtual environment for 
@@ -13,9 +11,12 @@ conda activate <yourenv>
 pip install -r requirements.txt
 ```
 
-Once you have that you need to define some environment variables as below. I am running Windows so used the batch file as below (secrets faked here) and included it as part of the conda environment activation script (i.e. in Anaconda3/envs/fitbit/etc/conda/activate.d/env_vars.bat)
+Then go to the [Fitbit App Config](https://dev.fitbit.com/apps/new), use Server mode with Callback URL http://localhost:5000/oauth-redirect. Note that the account must be approved for 'Intraday' data for non-personal devices in order to work like this in server mode.
+
+Once you have that you need to define some environment variables. I am running Windows so I made the following batch script and included it as part of the conda environment activation script:
 
 ```
+:: %CONDA_PREFIX%\etc\conda\activate.d\env_vars.bat
 set FITBIT_CLIENT_ID=<your_client_id>
 set FITBIT_CLIENT_SECRET=<your_secret_key>
 set SECRET_KEY=sdasdas
