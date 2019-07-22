@@ -16,8 +16,8 @@ pip install -r requirements.txt
 Once you have that you need to define some environment variables as below. I am running Windows so used the batch file as below (secrets faked here) and included it as part of the conda environment activation script (i.e. in Anaconda3/envs/fitbit/etc/conda/activate.d/env_vars.bat)
 
 ```
-set FITBIT_CLIENT_ID= <your_client_id>
-set FITBIT_CLIENT_SECRET= <your_secret_key>
+set FITBIT_CLIENT_ID=<your_client_id>
+set FITBIT_CLIENT_SECRET=<your_secret_key>
 set SECRET_KEY=sdasdas
 set FLASK_CONFIG=development
 ```
@@ -51,4 +51,4 @@ http://localhost:5000/data/<username>/intraday/activities-heart/2019-06-13/1sec
 ```
 Where 'username' is either the email associated with the fitbit device, or the string 'all', which will cause a dump of data from all registered devices as a JSON dict. Only intraday activity for heartrate is currently setup.
 
-The idea is to have this flask server running on a local machine as an authentication layer for multiple accounts, and then use a separate process to send a daily request and log the data. The list of authenticated users is available at 'http://localhost:5000/users'
+The idea is to have this flask server running on a local machine as an authentication layer for multiple accounts, and then use a separate process to send a daily request and log the data. The list of authenticated users is available at http://localhost:5000/users
