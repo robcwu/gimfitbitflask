@@ -6,16 +6,17 @@ def get_all_fitbit_credentials():
 def get_user_fitbit_credentials(user_id):
     return FitbitToken.query.filter_by(user_id=user_id).first()
 
-
-def save_fitbit_token(user_id, access_token, refresh_token):
+def save_fitbit_token(user_id, access_token, refresh_token, expires_at):
     fitbit_info = get_user_fitbit_credentials(user_id)
     if not fitbit_info:
-        fitbit_info = FitbitToken(None, None, None)
+        fitbit_info = FitbitToken(None, None, None, None)
     fitbit_info.user_id = user_id
     fitbit_info.access_token = access_token
     fitbit_info.refresh_token = refresh_token
+    fitbit_info.expires_at = expires_at
     db.session.add(fitbit_info)
     db.session.commit()
+    print('saved token')
     return fitbit_info
 
 class FitbitToken(db.Model):
@@ -24,12 +25,14 @@ class FitbitToken(db.Model):
     user_id = db.Column(db.String(64), unique=True, index=True)
     refresh_token = db.Column(db.String(500))
     access_token = db.Column(db.String(500))
+    expires_at = db.Column(db.Float)
 
-    def __init__(self, user_id, access_token, refresh_token):
+    def __init__(self, user_id, access_token, refresh_token, expires_at):
         super(FitbitToken, self).__init__()
         self.user_id = user_id
         self.access_token = access_token
         self.refresh_token = refresh_token
+        self.expires_at = expires_at
 
     def __repr__(self):
         return '<Token {}, User {}>'.format(self.id, self.user_id)

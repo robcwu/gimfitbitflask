@@ -6,6 +6,7 @@ import requests
 
 from app.models import save_fitbit_token
 from config import get_current_config
+import datetime
 
 # These grant permissions for your app to access user data.
 # Ask for as little as possible
@@ -23,6 +24,10 @@ SCOPES = [
 ]
 
 
+def dump_dict(obj):
+    with open('log.txt', 'w') as f:
+        json.dump(obj,f)
+
 @contextmanager
 def fitbit_client(fitbit_credentials):
     config = get_current_config()
@@ -30,14 +35,17 @@ def fitbit_client(fitbit_credentials):
         config.FITBIT_CLIENT_ID,
         config.FITBIT_CLIENT_SECRET,
         access_token=fitbit_credentials.access_token,
-        refresh_token=fitbit_credentials.refresh_token
+        refresh_token=fitbit_credentials.refresh_token,
+        expires_at=fitbit_credentials.expires_at,
+        refresh_cb=print
     )
     yield client
     # Save in case we did some refreshes
     save_fitbit_token(
         fitbit_credentials.user_id,
-        client.client.token['access_token'],
-        client.client.token['refresh_token']
+        client.client.session.token['access_token'],
+        client.client.session.token['refresh_token'],
+        client.client.session.token['expires_at']
     )
 
 
@@ -77,8 +85,10 @@ def do_fitbit_auth(code, user):
     )
     r.raise_for_status()
     response = r.json()
+    print(response)
     return save_fitbit_token(
         user,
         response['access_token'],
-        response['refresh_token']
+        response['refresh_token'],
+        response['expires_in']+datetime.datetime.now().timestamp()
     )
