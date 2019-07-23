@@ -29,7 +29,7 @@ After defining those you are ready to setup development.
 
 The app stores usernames and tokens in an sqlite database. This is by no means secure and is not meant to be deployed to the web.
 
-The OAuth scopes are defined in fitbit.py. This app requests all persmissions.
+The OAuth scopes are defined in fitbit.py. This app requests all permissions.
 
 The first time you run the app you need to create the database. With your virtual environment activated run
 ```
