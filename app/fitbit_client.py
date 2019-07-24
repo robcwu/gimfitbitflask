@@ -37,16 +37,19 @@ def fitbit_client(fitbit_credentials):
         access_token=fitbit_credentials.access_token,
         refresh_token=fitbit_credentials.refresh_token,
         expires_at=fitbit_credentials.expires_at,
-        refresh_cb=print
+        refresh_cb=lambda tokendict: save_fitbit_token(fitbit_credentials.user_id,  #
+                                                       tokendict['access_token'],   # refresh_cb takes only a tokendict as a parameter
+                                                       tokendict['refresh_token'],  # so save_fitbit_token is rewritten as a lambda
+                                                       tokendict['expires_at'])     #
     )
     yield client
-    # Save in case we did some refreshes
-    save_fitbit_token(
-        fitbit_credentials.user_id,
-        client.client.session.token['access_token'],
-        client.client.session.token['refresh_token'],
-        client.client.session.token['expires_at']
-    )
+    # Save in case we did some refreshes - this is now taken over by refresh_cb above.
+    #save_fitbit_token(
+    #    fitbit_credentials.user_id,
+    #    client.client.session.token['access_token'],
+    #    client.client.session.token['refresh_token'],
+    #    client.client.session.token['expires_at']
+    #)
 
 
 def get_permission_screen_url(user_state):
@@ -85,10 +88,9 @@ def do_fitbit_auth(code, user):
     )
     r.raise_for_status()
     response = r.json()
-    print(response)
     return save_fitbit_token(
         user,
         response['access_token'],
         response['refresh_token'],
-        response['expires_in']+datetime.datetime.now().timestamp()
+        response['expires_in']+datetime.datetime.now().timestamp() # for some reason the response contains 'expires_in' but not 'expires_at'
     )
