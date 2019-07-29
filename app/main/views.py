@@ -15,6 +15,8 @@ from app.main.forms import DeviceUserForm
 from app.models import get_user_fitbit_credentials, get_all_fitbit_credentials
 from . import main
 
+from oauthlib.oauth2.rfc6749.errors import InvalidGrantError
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -38,6 +40,12 @@ def index():
                 })
             except BadResponse:
                 flash("Api Call Failed") 
+            except InvalidGrantError:
+                user_profiles.append({
+                    'username': cred.user_id,
+                    'fullName': 'PROFILE LOAD FAILED PLEASE REAUTHENTICATE'
+                })
+                				
         
     return render_template('index.html',
                            user_state=user_state,
