@@ -86,7 +86,9 @@ def get_data(user,resource,base_date,detail_level):
                 try:
                     response[cred.user_id] = client.intraday_time_series(resource_,base_date=base_date,detail_level=detail_level)
                 except BadResponse:
-                    flash("Api Call Failed")        
+                    flash("Api Call Failed")
+                except InvalidGrantError:
+                    return redirect(url_for('main.index'))			
         
         
     else:
@@ -96,6 +98,8 @@ def get_data(user,resource,base_date,detail_level):
                 response = client.intraday_time_series(resource_,base_date=base_date,detail_level=detail_level)
             except BadResponse:
                 flash("Api Call Failed, malformed query?")
+            except InvalidGrantError:
+                    return redirect(url_for('main.index'))	
         
     
     return jsonify(response)
