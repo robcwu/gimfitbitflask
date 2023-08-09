@@ -11,6 +11,9 @@ import datetime
 # These grant permissions for your app to access user data.
 # Ask for as little as possible
 # Details https://dev.fitbit.com/docs/oauth2/
+
+# aug 9, 2023 - added in more scopes
+
 SCOPES = [
     'profile',
     'activity',
@@ -20,7 +23,10 @@ SCOPES = [
     'settings',
     'sleep',
     'social',
-    'weight'
+    'weight',
+    'oxygen_saturation', 
+    'respiratory_rate',
+    'temperature'    
 ]
 
 

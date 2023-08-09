@@ -1,4 +1,6 @@
+#rob modify Jul31 - added time series to get Sleep data
 import sqlalchemy
+from datetime import datetime
 from fitbit.exceptions import BadResponse
 from flask import flash
 from flask import redirect
@@ -104,4 +106,109 @@ def get_data(user,resource,base_date,detail_level):
     
     return jsonify(response)
     
+@main.route('/data/<user>/time_series/<resource>/<base_date>/<period>', methods=['GET'])
+def get_ts_data(user,resource,base_date,period):
+    """
+    endpoint that retrieves time_series data
+    """
+    
+#   resource_ = resource.replace('-','/')
+    resource_ = resource
+    print(resource)
+    
+    if user == 'all':
+        creds = get_all_fitbit_credentials()
+        response = {}
+
+        for cred in creds:
+            with fitbit_client(cred) as client:
+                try:
+                    response[cred.user_id] = client.time_series(resource_,base_date=base_date,period=period)
+                except BadResponse:
+                    flash("Api Call Failed")
+                except InvalidGrantError:
+                    return redirect(url_for('main.index'))			
+        
+        
+    else:
+        cred = get_user_fitbit_credentials(unquote(user))
+        with fitbit_client(cred) as client:
+            try:
+                response = client.time_series(resource_,base_date=base_date,period=period)
+            except BadResponse:
+                flash("Api Call Failed, malformed query?")
+            except InvalidGrantError:
+                    return redirect(url_for('main.index'))	
+        
+    
+    return jsonify(response)
+    
+@main.route('/data/<user>/sleep/<base_date>', methods=['GET'])
+def get_sleep_data(user,base_date):
+    """
+    endpoint that retrieves time_series data
+    """
+    sleepdate = datetime.strptime(base_date, '%Y-%m-%d')
+	
+    if user == 'all':
+        creds = get_all_fitbit_credentials()
+        response = {}
+
+        for cred in creds:
+            with fitbit_client(cred) as client:
+                try:
+                    response[cred.user_id] = client.get_sleep(date=sleepdate)
+                except BadResponse:
+                    flash("Api Call Failed")
+                except InvalidGrantError:
+                    return redirect(url_for('main.index'))			
+        
+        
+    else:
+        cred = get_user_fitbit_credentials(unquote(user))
+        with fitbit_client(cred) as client:
+            try:
+                response = client.get_sleep(date=sleepdate)
+            except BadResponse:
+                flash("Api Call Failed, malformed query?")
+            except InvalidGrantError:
+                    return redirect(url_for('main.index'))	
+        
+    
+    return jsonify(response)
+    
+    
+@main.route('/data/<user>/<resource>/<base_date>', methods=['GET'])
+def get_spo2_data(user,resource,base_date):
+    """
+    endpoint that retrieves time_series data
+    """
+ #   spo2date = datetime.strptime(base_date, '%Y-%m-%d')
+#	print(base_date)
+    if user == 'all':
+        creds = get_all_fitbit_credentials()
+        response = {}
+
+        for cred in creds:
+            with fitbit_client(cred) as client:
+                try:
+                    response[cred.user_id] = client.get_new_resource(resource=resource,base_date=base_date)
+                except BadResponse:
+                    flash("Api Call Failed")
+                except InvalidGrantError:
+                    return redirect(url_for('main.index'))			
+        
+        
+    else:
+        cred = get_user_fitbit_credentials(unquote(user))
+        with fitbit_client(cred) as client:
+            try:
+                response = client.get_new_resource(resource=resource,base_date=base_date)
+            except BadResponse:
+                flash("Api Call Failed, malformed query?")
+            except InvalidGrantError:
+                    return redirect(url_for('main.index'))	
+        
+    
+    return jsonify(response)
     
