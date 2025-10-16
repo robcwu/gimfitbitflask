@@ -57,3 +57,5 @@ http://localhost:5000/data/<username>/intraday/activities-heart/2019-06-13/1sec
 Where 'username' is either the email associated with the fitbit device, or the string 'all', which will cause a dump of data from all registered devices as a JSON dict. Only intraday activity for heartrate is currently setup.
 
 The idea is to have this flask server running on a local machine as an authentication layer for multiple accounts, and then use a separate process to send a daily request and log the data. The list of authenticated users is available at http://localhost:5000/users
+
+** need to update requirements with updated fitbit package that has support for ECG and spo2
