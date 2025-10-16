@@ -176,6 +176,37 @@ def get_sleep_data(user,base_date):
         
     
     return jsonify(response)
+
+    
+@main.route('/data/<user>/ecg/options', methods=['GET'])
+def get_ecg_data(user,options):
+
+    if user == 'all':
+        creds = get_all_fitbit_credentials()
+        response = {}
+
+        for cred in creds:
+            with fitbit_client(cred) as client:
+                try:
+                    response[cred.user_id] = client.ecg(options)
+                except BadResponse:
+                    flash("Api Call Failed")
+                except InvalidGrantError:
+                    return redirect(url_for('main.index'))			
+        
+        
+    else:
+        cred = get_user_fitbit_credentials(unquote(user))
+        with fitbit_client(cred) as client:
+            try:
+                response = client.get_new_resource(resource=resource,base_date=base_date)
+            except BadResponse:
+                flash("Api Call Failed, malformed query?")
+            except InvalidGrantError:
+                    return redirect(url_for('main.index'))	
+        
+    
+    return jsonify(response)
     
     
 @main.route('/data/<user>/<resource>/<base_date>', methods=['GET'])
