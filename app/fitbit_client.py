@@ -13,6 +13,7 @@ import datetime
 # Details https://dev.fitbit.com/docs/oauth2/
 
 # aug 9, 2023 - added in more scopes
+# oct 16, 2025 - added in ecg
 
 SCOPES = [
     'profile',
@@ -26,7 +27,8 @@ SCOPES = [
     'weight',
     'oxygen_saturation', 
     'respiratory_rate',
-    'temperature'    
+    'temperature',
+    'electrocardiogram'
 ]
 
 
