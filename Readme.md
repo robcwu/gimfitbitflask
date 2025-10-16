@@ -46,7 +46,11 @@ python manage.py
  * Debugger pin code: 129-285-482
 ```
 
-Authenticate users on the index page, then access the data using an HTTP GET request (i.e. in the browser):
+Authenticate users on the index page
+
+http://localhost:5000
+
+Access the data using an HTTP GET request (i.e. in the browser):
 ```
 http://localhost:5000/data/<username>/intraday/activities-heart/2019-06-13/1sec
 ```
