@@ -178,9 +178,11 @@ def get_sleep_data(user,base_date):
     return jsonify(response)
 
     
-@main.route('/data/<user>/ecg/options', methods=['GET'])
+@main.route('/data/<user>/ecg/<options>', methods=['GET'])
 def get_ecg_data(user,options):
 
+    print("ecg")
+    print(options)
     if user == 'all':
         creds = get_all_fitbit_credentials()
         response = {}
@@ -188,7 +190,7 @@ def get_ecg_data(user,options):
         for cred in creds:
             with fitbit_client(cred) as client:
                 try:
-                    response[cred.user_id] = client.ecg(options)
+                    response[cred.user_id] = client.ecg(options=options)
                 except BadResponse:
                     flash("Api Call Failed")
                 except InvalidGrantError:
@@ -199,7 +201,7 @@ def get_ecg_data(user,options):
         cred = get_user_fitbit_credentials(unquote(user))
         with fitbit_client(cred) as client:
             try:
-                response = client.get_new_resource(resource=resource,base_date=base_date)
+                response = client.ecg(options=options)
             except BadResponse:
                 flash("Api Call Failed, malformed query?")
             except InvalidGrantError:
@@ -215,7 +217,7 @@ def get_spo2_data(user,resource,base_date):
     endpoint that retrieves time_series data
     """
  #   spo2date = datetime.strptime(base_date, '%Y-%m-%d')
-#	print(base_date)
+    print("spo2")
     if user == 'all':
         creds = get_all_fitbit_credentials()
         response = {}
