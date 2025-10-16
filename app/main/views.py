@@ -178,11 +178,10 @@ def get_sleep_data(user,base_date):
     return jsonify(response)
 
     
-@main.route('/data/<user>/ecg/<options>', methods=['GET'])
-def get_ecg_data(user,options):
+@main.route('/data/<user>/ecg/<date>/<sort>', methods=['GET'])
+def get_ecg_data(user,date,sort):
 
     print("ecg")
-    print(options)
     if user == 'all':
         creds = get_all_fitbit_credentials()
         response = {}
@@ -190,7 +189,7 @@ def get_ecg_data(user,options):
         for cred in creds:
             with fitbit_client(cred) as client:
                 try:
-                    response[cred.user_id] = client.ecg(options=options)
+                    response[cred.user_id] = client.ecg(date=date,sort=sort)
                 except BadResponse:
                     flash("Api Call Failed")
                 except InvalidGrantError:
@@ -201,7 +200,7 @@ def get_ecg_data(user,options):
         cred = get_user_fitbit_credentials(unquote(user))
         with fitbit_client(cred) as client:
             try:
-                response = client.ecg(options=options)
+                response = client.ecg(date=date,sort=sort)
             except BadResponse:
                 flash("Api Call Failed, malformed query?")
             except InvalidGrantError:
