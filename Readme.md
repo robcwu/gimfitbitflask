@@ -59,4 +59,29 @@ Where 'username' is either the email associated with the fitbit device, or the s
 
 The idea is to have this flask server running on a local machine as an authentication layer for multiple accounts, and then use a separate process to send a daily request and log the data. The list of authenticated users is available at http://localhost:5000/users
 
+	
+Intraday hr	http://localhost:5000/data/all/intraday/activities-heart/2025-10-17/1sec
+
+Intraday spo2	
+    http://localhost:5000/data/all/spo2/2025-10-17
+    https://api.fitbit.com/1/user/-/spo2/date/2025-06-11/all.json
+Intraday steps
+    https://api.fitbit.com/1/user/-/activities/steps/date/2025-10-17/1d/1min.json
+    http://localhost:5000/data/all/intraday/activities-steps/2025-10-17/1min
+Sleep 	
+    https://api.fitbit.com/1/user/-/sleep/date/2025-10-17.json
+    http://localhost:5000/data/all/sleep/2025-10-17
+Ecg list	
+    https://api.fitbit.com/1/user/-/ecg/list.json?afterDate=2025-10-14&sort=asc&limit=1&offset=0
+    http://localhost:5000/data/all/ecg/2025-10-16/asc
+hrv	
+    https://api.fitbit.com/1/user/-/hrv/date/2025-06-11/all.json
+    http://localhost:5000/data/all/hrv/2025-10-17
+    http://localhost:5000/data/all/hrv/2025-06-11
+br	
+    https://api.fitbit.com/1/user/-/br/date/2025-06-11/all.json
+
+    http://localhost:5000/data/all/br/2025-10-17
+    http://localhost:5000/data/all/br/2025-06-11
+
 
