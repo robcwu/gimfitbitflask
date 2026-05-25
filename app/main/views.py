@@ -71,6 +71,44 @@ def get_users():
     """
     return jsonify([cred.user_id for cred in get_all_fitbit_credentials()])
 
+@main.route('/users/<user_id>/delete', methods=['POST', 'DELETE'])
+def delete_user(user_id):
+    """
+    Endpoint to remove a user's Fitbit credentials and delete them from the system.
+    """
+
+    cred = get_user_fitbit_credentials(user_id)
+    
+    if not cred:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.method == 'DELETE':
+            return jsonify({"error": "User not found"}), 404
+        flash(f"User {user_id} not found.")
+        return redirect(url_for('main.index'))
+
+    try:
+        # 2. Delete the record from the database session
+        db.session.delete(cred)
+        db.session.commit()
+        
+        # 3. Handle responses based on request type (AJAX vs Standard Form)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.method == 'DELETE':
+            return jsonify({"status": "success", "message": f"User {user_id} successfully removed."}), 200
+            
+        flash(f"User {user_id} has been successfully removed.")
+        
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        db.session.rollback()
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.method == 'DELETE':
+            return jsonify({"error": "Database error occurred while deleting user."}), 500
+            
+        flash("An error occurred while trying to remove the user.")
+        
+    return redirect(url_for('main.index'))
+
+
+
+
 @main.route('/data/<user>/intraday/<resource>/<base_date>/<detail_level>', methods=['GET'])
 def get_data(user,resource,base_date,detail_level):
     """
