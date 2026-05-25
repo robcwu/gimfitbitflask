@@ -82,7 +82,7 @@ def delete_user(user_id):
     if not cred:
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.method == 'DELETE':
             return jsonify({"error": "User not found"}), 404
-        flash(f"User {user_id} not found.")
+        flash("User not found.")
         return redirect(url_for('main.index'))
 
     try:
@@ -92,9 +92,9 @@ def delete_user(user_id):
         
         # 3. Handle responses based on request type (AJAX vs Standard Form)
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.method == 'DELETE':
-            return jsonify({"status": "success", "message": f"User {user_id} successfully removed."}), 200
+            return jsonify({"status": "success", "message": "User successfully removed."}), 200
             
-        flash(f"User {user_id} has been successfully removed.")
+        flash("User has been successfully removed.")
         
     except sqlalchemy.exc.SQLAlchemyError as e:
         db.session.rollback()
