@@ -59,6 +59,8 @@ Where 'username' is either the email associated with the fitbit device, or the s
 
 The idea is to have this flask server running on a local machine as an authentication layer for multiple accounts, and then use a separate process to send a daily request and log the data. The list of authenticated users is available at http://localhost:5000/users
 
+Can remove users now: http://localhost:5000/users/<user>/delete
+eg: http://localhost:5000/users/wearable1@gmail.com/delete
 	
 Intraday hr	http://localhost:5000/data/all/intraday/activities-heart/2025-10-17/1sec
 

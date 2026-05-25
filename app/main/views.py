@@ -71,7 +71,7 @@ def get_users():
     """
     return jsonify([cred.user_id for cred in get_all_fitbit_credentials()])
 
-@main.route('/users/<user_id>/delete', methods=['POST', 'DELETE'])
+@main.route('/users/<user_id>/delete', methods=['POST', 'DELETE','GET'])
 def delete_user(user_id):
     """
     Endpoint to remove a user's Fitbit credentials and delete them from the system.
