@@ -249,7 +249,7 @@ def get_ecg_data(user,date,sort):
     
     
 @main.route('/data/<user>/<resource>/<base_date>', methods=['GET'])
-def get_spo2_data(user,resource,base_date):
+def get_resource_data(user,resource,base_date):
     """
     endpoint that retrieves time_series data
     """
@@ -274,6 +274,40 @@ def get_spo2_data(user,resource,base_date):
         with fitbit_client(cred) as client:
             try:
                 response = client.get_new_resource(resource=resource,base_date=base_date)
+            except BadResponse:
+                flash("Api Call Failed, malformed query?")
+            except InvalidGrantError:
+                    return redirect(url_for('main.index'))	
+        
+    
+    return jsonify(response)
+    
+@main.route('/data/<user>/<resource>/<start_date>/<end_date>', methods=['GET'])
+def get_resource_data_start_end(user,resource,start_date,end_date):
+    """
+    endpoint that retrieves time_series data
+    """
+ #   spo2date = datetime.strptime(base_date, '%Y-%m-%d')
+    print(resource)
+    if user == 'all':
+        creds = get_all_fitbit_credentials()
+        response = {}
+
+        for cred in creds:
+            with fitbit_client(cred) as client:
+                try:
+                    response[cred.user_id] = client.get_new_resource_start_end(resource=resource,start_date=start_date,end_date=end_date)
+                except BadResponse:
+                    flash("Api Call Failed")
+                except InvalidGrantError:
+                    return redirect(url_for('main.index'))			
+        
+        
+    else:
+        cred = get_user_fitbit_credentials(unquote(user))
+        with fitbit_client(cred) as client:
+            try:
+                response = client.get_new_resource_start_end(resource=resource,start_date=start_date,end_date=end_date)
             except BadResponse:
                 flash("Api Call Failed, malformed query?")
             except InvalidGrantError:
