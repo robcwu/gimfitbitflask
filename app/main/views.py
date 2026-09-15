@@ -292,7 +292,7 @@ def get_resource_data_start_end(user,resource,start_date,end_date):
     endpoint that retrieves time_series data
     """
  #   spo2date = datetime.strptime(base_date, '%Y-%m-%d')
-    resource = resource.replace('-','/')
+    resource = resource.replace('|','/')
     print(resource)
     if user == 'all':
         creds = get_all_fitbit_credentials()
