@@ -1,4 +1,8 @@
 #rob modify Jul31 - added time series to get Sleep data
+#modified to add date range to both GIM fbflask and python fitbit 
+#pip install -e ../python-fitbit  to get new changes
+
+
 import sqlalchemy
 from datetime import datetime
 from fitbit.exceptions import BadResponse
